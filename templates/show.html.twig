@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} ShowPage {% endblock %}
+
+{% block body %}
+    <div>
+        <h1>{{ post.title }}</h1>
+        <h5>{{ post.date|date("H:i d/m/y") }} by {{ post.user.firstname }} {{ post.user.lastname}}</h5>
+        <p>{{ post.content }}</p>
+    </div>
+
+    <div>
+        <h3>Comments</h3>
+
+        {% for comment in post.comment %}
+
+            <h5>{{comment.date|date("H:i d/m/y")}} by {{ comment.user.firstname }} {{ comment.user.lastname }}</h5>
+            <p>{{comment.content}}</p>
+
+        {% endfor %}
+    </div>
+
+    <div>
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
+
+    {# {{ user.firstname }} #}
+{% endblock %}
