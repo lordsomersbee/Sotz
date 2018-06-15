@@ -7,7 +7,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
 class RegisterType extends AbstractType
 {
@@ -28,30 +30,20 @@ class RegisterType extends AbstractType
                     'placeholder' => 'Email'
                 ] 
             ))
-            ->add('email', TextType::class, array(
+            ->add('email', EmailType::class, array(
                 'required' => true,
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Email'
                 ] 
             ))
-            ->add('password', PasswordType::class, array(
+            ->add('password', RepeatedType::class, array(
                 'required' => true,
-                'attr' => [
+                'options' => array('attr' => array(
                     'class' => 'form-control',
-                    'placeholder' => 'Password'
-                ]                
-            ))
-            ->add('repeat_password', PasswordType::class, array(
-                'required' => true,
-                'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Password'
-                ]                
-            ))
-            ->add('signup', SubmitType::class, array(
-                'label' => "Sign up",
-                'attr' => ['class' => 'btn btn-lg btn-primary btn-block']
+                    'placeholder' => 'Password')),   
+                'first_options'  => array('label' => 'Password'),
+                'second_options' => array('label' => 'Repeat Password'),
             ))
         ;
     }
