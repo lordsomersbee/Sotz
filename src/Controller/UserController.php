@@ -34,7 +34,7 @@ class UserController extends Controller
             $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['email' => $userInput->getEmail()]);
 
             $session = new Session();
-            $session->start();
+            // $session->start();
 
             $this->getDoctrine()->getManager()->detach($user);
             $session->set('logged_user', $user);
