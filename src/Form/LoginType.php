@@ -28,10 +28,6 @@ class LoginType extends AbstractType
                     'placeholder' => 'Password'
                 ]                
             ))
-            ->add('save', SubmitType::class, array(
-                'label' => "Sign in",
-                'attr' => ['class' => 'btn btn-lg btn-primary btn-block']
-            ))
         ;
     }
 }
