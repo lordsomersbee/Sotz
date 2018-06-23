@@ -18,11 +18,26 @@
   </head>
 
   <body class="text-center">
-    {{ form_start(form, {attr: {class: 'form-signin'} }) }}
+
+    <form action="{{ path('login') }}" method="post" class="form-signin">
       <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+
+      {% if errors %}
+        <div class="alert alert-danger">
+          {{ errors.messageKey }}
+        </div>
+      {% endif %}
      
-      {{ form_widget(form) }}
+      <div class="form-group">
+        <label for="username">Username </label>
+        <input type="text" name="_username" id="username" class="form-control" value="{{ username }}">
+      </div>
+
+      <div class="form-group">
+        <label for="username">Password </label>
+        <input type="password" name="_password" id="password" class="form-control">
+      </div>
       
       <div class="checkbox mb-3">
         <label>
@@ -34,7 +49,7 @@
       <a href="{{ path('register') }}" class="btn btn-lg btn-info btn-block">Sign up</a>
 
       <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
-    {{ form_end(form) }}
+    </form>
 
   </body>
 </html>

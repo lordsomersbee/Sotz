@@ -9,11 +9,20 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker;
 use Faker\Provider\Internet;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 // require_once 'vendor/autoload.php';
 
-class AppFixtures extends Fixture 
+class AppFixtures extends Fixture implements ContainerAwareInterface
 {
+    private $container;
+
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
     public function load(ObjectManager $manager) 
     {
         $faker = Faker\Factory::create();
@@ -21,9 +30,13 @@ class AppFixtures extends Fixture
         for($i = 0; $i < 30; $i++) {
             $user = new User();
             $user->setEmail($faker->freeEmail);
+            $user->setUsername($faker->userName);
             $user->setFirstname($faker->firstNameMale);
             $user->setLastname($faker->lastName);
-            $user->setPassword($faker->password);
+
+            $encoder = $this->container->get('security.password_encoder');
+            $password = $encoder->encodePassword($user, $faker->password);
+            $user->setPassword($password);
 
             for($j = 0; $j < 1; $j++) {
                 $post = new Post();
@@ -48,6 +61,22 @@ class AppFixtures extends Fixture
 
             $manager->persist($user);
         }
+
+        //--------------------
+
+        $user = new User();
+        $user->setEmail('qwe@qwe.qwe');
+        $user->setUsername('qwe');
+        $user->setFirstname('Qwe');
+        $user->setLastname('qwE');
+
+        $encoder = $this->container->get('security.password_encoder');
+        $password = $encoder->encodePassword($user, 'qwe');
+        $user->setPassword($password);
+
+        $manager->persist($user);
+
+        //--------------------
 
         $manager->flush();
     }

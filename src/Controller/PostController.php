@@ -24,22 +24,15 @@ class PostController extends Controller
      */
     public function index()
     {
-        //TODO access only for logged in
-
-        $session = new Session();
-        $session->start();
-        $logged_user_name = $session->get('logged_user');
-        $logged_user_name = $this->getDoctrine()->getManager()->merge($logged_user_name);
-
         $posts = $this->getDoctrine()->getRepository(Post::class)->findAll();
 
-        return $this->render('index.html.twig', array('logged_user_name' => $logged_user_name->getFirstname(), 'posts' => $posts));
+        return $this->render('index.html.twig', array('posts' => $posts));
     }
 
     /**
      * @Route("/post/{id}", name="post_show")
      */
-    public function showPost(Request $request, $id)
+    public function showPost(Request $request, $id, User $user = null)
     {
         $post = $this->getDoctrine()->getRepository(Post::class)->findOneByIdJoinedToUserAndCommentsJoinedToUser($id);
 
@@ -53,8 +46,7 @@ class PostController extends Controller
             $comment->setDate(\DateTime::createFromFormat('Y-m-d H-i-s', date('Y-m-d H-i-s')));  
             $comment->setPost($post);
 
-            //TODO when login system added
-            $user = $this->getDoctrine()->getRepository(User::class)->find(228);
+            $user = $this->getUser();
             $comment->setUser($user);          
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -62,12 +54,6 @@ class PostController extends Controller
             $entityManager->flush();
     
             return $this->redirectToRoute('post_show', array('request' => $request, 'id' => $id));
-
-            // return $this->render('show.html.twig', array(
-            //     'post' => $post,
-            //     'form' => $form->createView(),
-            //     'user' => $user
-            // ));   
         }
 
         return $this->render('show.html.twig', array(

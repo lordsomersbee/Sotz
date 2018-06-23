@@ -25,12 +25,14 @@
                     <a class="nav-link disabled" href="#">Disabled</a>
                     </li>
                 </ul>
-                <a href="profile.php" class="btn btn-info" role="buton">{% block user_name %}{% endblock %}</a>
+                <a href="profile.php" class="btn btn-info" role="buton">{{ app.user.firstname }}</a>
                 <form class="form-inline mt-2 mt-md-0">
                     <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                 </form>
-                <a href="logout.php" class="btn btn-danger ml-4" role="buton">Log out</a>
+                
+                <a href="{{ logout_path() }}" class="btn btn-danger ml-4" role="buton">Log out</a>
+    
                 </div>
             </nav>
         {% endblock %}

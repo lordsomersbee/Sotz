@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
  * @Route("/")
@@ -17,37 +18,28 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class UserController extends Controller
 {
     /**
-     * @Route("/", name="login")
+     * @Route("/login", name="login")
      */
-    public function index(Request $request)
+    public function index(Request $request, AuthenticationUtils $authenticationUtils)
     {
-        //TODO action when wrong login
-
-        $userInput = new User();
-
-        $form = $this->createForm(LoginType::class, $userInput);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $userInput = $form->getData();
-            
-            $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['email' => $userInput->getEmail()]);
-
-            $session = new Session();
-            // $session->start();
-
-            $this->getDoctrine()->getManager()->detach($user);
-            $session->set('logged_user', $user);
-    
-            return $this->redirectToRoute('homepage');
-        }
+        $errors = $authenticationUtils->getLastAuthenticationError();
+        $lastUserName = $authenticationUtils->getLastUsername(); 
 
         return $this->render('user/login.html.twig', array(
-            'form' => $form->createView()
+            'errors' => $errors,
+            'username' => $lastUserName,
         ));
     }
 
-    //TODO register mechanizm
+    /**
+     * @Route("/logout", name="logout")
+     */
+    public function logout() 
+    {
+
+    }
+
+    //TODO register system
 
     /**
      * @Route("/register", name="register")
@@ -64,7 +56,6 @@ class UserController extends Controller
 
             //TODO check if email is not in database
             //TODO send mail to confirm registration
-            //TODO meybe some flash message
 
             //form validation
 
