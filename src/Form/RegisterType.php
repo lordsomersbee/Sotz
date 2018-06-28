@@ -2,6 +2,8 @@
 
 namespace App\Form;
 
+use App\Entity\User;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -10,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RegisterType extends AbstractType
 {
@@ -20,31 +23,41 @@ class RegisterType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Email'
                 ] 
             ))
             ->add('lastname', TextType::class, array(
                 'required' => true,
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Email'
+                ] 
+            ))
+            ->add('username', TextType::class, array(
+                'required' => true,
+                'attr' => [
+                    'class' => 'form-control',
                 ] 
             ))
             ->add('email', EmailType::class, array(
                 'required' => true,
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Email'
                 ] 
             ))
             ->add('password', RepeatedType::class, array(
+                'type' => PasswordType::class,
                 'required' => true,
                 'options' => array('attr' => array(
-                    'class' => 'form-control',
-                    'placeholder' => 'Password')),   
+                    'class' => 'form-control')),   
                 'first_options'  => array('label' => 'Password'),
                 'second_options' => array('label' => 'Repeat Password'),
             ))
         ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => User::class
+        ]);
     }
 }

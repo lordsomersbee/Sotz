@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/")
@@ -44,25 +45,43 @@ class UserController extends Controller
     /**
      * @Route("/register", name="register")
      */
-    public function register(Request $request)
+    public function register(Request $request, UserPasswordEncoderInterface $encoder)
     {
-        $newUser = new User();
+        // $newUser = new User();
 
-        $form = $this->createForm(RegisterType::class, $newUser);
+        // $form = $this->createForm(RegisterType::class, $newUser);
+        // $form->handleRequest($request);
+
+        // if ($form->isSubmitted() && $form->isValid()) {
+        //     $newUser = $form->getData();
+
+        //     //TODO check if email is not in database
+        //     //TODO send mail to confirm registration
+
+        //     //form validation
+
+        //     $entityManager = $this->getDoctrine()->getManager();
+        //     $entityManager->persist($newUser);
+        //     $entityManager->flush();
+            
+        //     return $this->redirectToRoute('login', array('request' => $request));
+        // }
+
+        // 
+
+        $user = new User();
+
+        $form = $this->createForm(RegisterType::class, $user);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $newUser = $form->getData();
-
-            //TODO check if email is not in database
-            //TODO send mail to confirm registration
-
-            //form validation
+            $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
 
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($newUser);
+            $entityManager->persist($user);
             $entityManager->flush();
-            
+
             return $this->redirectToRoute('login', array('request' => $request));
         }
 
